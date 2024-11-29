@@ -1,0 +1,23 @@
+# Replace these variables with your specific details
+hostname = "XXX.us-east-2.redshift-serverless.amazonaws.com"
+port = "5439"  # Default Redshift port
+username = "XX"
+password = "XXXX"
+database_name = "dev"
+#query = "SELECT * FROM public.sales"
+
+query = "SELECT * FROM naresh_aws_tpcds.tpcds1.call_center"
+
+# JDBC URL construction
+jdbc_url = f"jdbc:redshift://{hostname}:{port}/{database_name}"
+
+# Reading data using JDBC
+df_query = (spark.read
+            .format("jdbc")
+            .option("url", jdbc_url)
+            .option("dbtable", f"({query}) as subquery")
+            .option("user", username)
+            .option("password", password)
+            .load())
+
+display(df_query)
